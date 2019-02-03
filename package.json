@@ -5,6 +5,7 @@
   "dependencies": {
     "enzyme": "^3.8.0",
     "enzyme-adapter-react-16": "^1.8.0",
+    "gh-pages": "^2.0.1",
     "react": "^16.7.0",
     "react-beautiful-dnd": "^10.0.4",
     "react-dom": "^16.7.0",
@@ -12,6 +13,8 @@
     "react-test-renderer": "^16.7.0"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -25,5 +28,6 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "homepage": "https://vladn17.github.io/route-editor"
 }
