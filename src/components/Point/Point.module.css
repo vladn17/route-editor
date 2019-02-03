@@ -1,0 +1,12 @@
+.point {
+  display: flex;
+  margin-bottom: 5px;
+  padding: 4px;
+  justify-content: space-between;
+  border: 1px solid grey;
+  border-radius: 10px;
+}
+
+.icon {
+  cursor: pointer;
+}
