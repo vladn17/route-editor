@@ -6,18 +6,19 @@ export default class Map extends React.PureComponent {
   componentDidMount() {
     window.ymaps.ready(() => {
       this.map = new window.ymaps.Map("map", {
-        center: [55.76, 37.64],
-        zoom: 9,
+        center: this.props.defaultCenter,
+        zoom: this.props.defaultZoom,
+      });
+      this.map.events.add('actionend', () => {
+        this.props.handleCenterMove(this.map.getCenter());
       });
     });
   }
 
   render() {
-    const points  = this.props.points.map((point, index) => {
-      return <MapMarker key={index} index={index} coords={point.coords}
-                        name={point.name} map={this.map}
-                        handleMoveMarker={this.props.handleMoveMarker}/>
-    });
+    const points  = this.props.points.map((point, index) => (
+      <MapMarker key={index} index={index} coords={point.coords} name={point.name} map={this.map} handleMoveMarker={this.props.handleMoveMarker}/>
+    ));
     const routeData = this.props.points.map(point => point.coords);
     return (
       <>

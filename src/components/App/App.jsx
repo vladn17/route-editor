@@ -10,9 +10,16 @@ class App extends Component {
     this.state = {
       points: [],
       inputValue: '',
+      mapCenter: [55.76, 37.64],
     };
     this.cache = {};
   }
+
+  handleCenterMove = (coords) => {
+    this.setState({
+      mapCenter: coords,
+    });
+  };
 
   handleChange = (e) => {
     this.setState({
@@ -22,45 +29,23 @@ class App extends Component {
 
   handleKeyDown = (e) => {
     if(e.keyCode === 13) {
-
-      if(this.cache[this.state.inputValue]) {
-        this.setState(state => ({
-          points: state.points.concat({name: this.state.inputValue, coords: this.cache[this.state.inputValue]}),
-          inputValue: '',
-        }));
-        return;
-      }
-
-      window.ymaps.geocode(this.state.inputValue, { results: 1})
-        .then(res => {
-          const geoObject = res.geoObjects.get(0);
-          const coords = geoObject.geometry.getCoordinates();
-          this.cache[this.state.inputValue] = coords;
-          this.setState(state => ({
-            points: state.points.concat({name: this.state.inputValue, coords}),
-            inputValue: '',
-          }));
-        })
-        .catch(error => console.log(error));
+      this.setState(state => ({
+        points: state.points.concat({name: state.inputValue, coords: state.mapCenter}),
+        inputValue: '',
+      }));
     }
   };
 
   handleDelete = (index) => () => {
     this.setState(state => ({
       points: [...state.points.slice(0, index), ...state.points.slice(index+1)]
-    }))
+    }));
   };
 
   handleMoveMarker = (index, newcoords) => {
-    window.ymaps.geocode(newcoords, { results: 1})
-      .then(res => {
-        const geoObject = res.geoObjects.get(0);
-        const name = geoObject.properties.get('text');
-        this.setState(state => ({
-          points: state.points.map((point, i) => index === i ? {name: name, coords: newcoords} : point)
-        }))
-      })
-      .catch(error => console.log(error));
+    this.setState(state => ({
+      points: state.points.map((point, i) => index === i ? {...point, coords: newcoords} : point)
+    }));
   };
 
   onDragEnd = (result) => {
@@ -75,7 +60,7 @@ class App extends Component {
     points.splice(result.destination.index, 0, moved);
     this.setState({
       points: points,
-    })
+    });
   };
 
   render() {
@@ -89,7 +74,11 @@ class App extends Component {
             <PointInput handleChange={this.handleChange} handleKeyDown={this.handleKeyDown} value={this.state.inputValue}/>
             <PointsList points={this.state.points} onDragEnd={this.onDragEnd} handleDelete={this.handleDelete}/>
           </div>
-          <Map points={this.state.points} handleMoveMarker={this.handleMoveMarker}/>
+          <Map
+            defaultCenter={[55.76, 37.64]}
+            defaultZoom={9} points={this.state.points}
+            handleMoveMarker={this.handleMoveMarker}
+            handleCenterMove={this.handleCenterMove}/>
         </div>
       </div>
     );

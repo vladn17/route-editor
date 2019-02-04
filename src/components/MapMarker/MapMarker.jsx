@@ -12,7 +12,6 @@ export default class MapMarker extends React.PureComponent {
       this.props.handleMoveMarker(this.props.index, e.get('target').geometry.getCoordinates());
     });
     this.props.map.geoObjects.add(this.marker);
-    this.props.map.setCenter(coords);
   }
 
   componentDidUpdate(prevProps) {
@@ -33,6 +32,5 @@ export default class MapMarker extends React.PureComponent {
   render() {
     return null;
   }
-
 
 }
